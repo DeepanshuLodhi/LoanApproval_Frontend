@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
-import styled from 'styled-components';
-import axios from 'axios';
+import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import styled from "styled-components";
+import axios from "axios";
 
 // Types
 interface Application {
@@ -13,8 +13,8 @@ interface Application {
   employment_status: boolean;
   address: string;
   createdAt: string;
-  application_status: 'PENDING' | 'VERIFIED' | 'APPROVED' | 'REJECTED';
-  rejected_by?: 'VERIFIER' | 'ADMIN';
+  application_status: "PENDING" | "VERIFIED" | "APPROVED" | "REJECTED";
+  rejected_by?: "VERIFIER" | "ADMIN";
 }
 
 interface ApiApplication {
@@ -57,7 +57,7 @@ const Logo = styled.div`
   font-size: 1.8rem;
   font-weight: 700;
   color: #2c3e50;
-  
+
   span {
     color: #3498db;
   }
@@ -72,7 +72,7 @@ const BackButton = styled.button`
   color: #3498db;
   cursor: pointer;
   font-size: 1rem;
-  
+
   &:hover {
     text-decoration: underline;
   }
@@ -107,11 +107,11 @@ const ApplicationCard = styled.div`
   padding: 2rem;
   margin-bottom: 2rem;
   transition: all 0.3s ease;
-  
+
   &:last-child {
     margin-bottom: 0;
   }
-  
+
   &:hover {
     transform: translateY(-5px);
     box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
@@ -167,24 +167,34 @@ const StatusBadge = styled.span<{ status: string }>`
   border-radius: 30px;
   font-size: 0.9rem;
   font-weight: 600;
-  
-  background-color: ${props => {
-    switch(props.status) {
-      case 'PENDING': return '#fff8e1';
-      case 'VERIFIED': return '#e3f2fd';
-      case 'APPROVED': return '#e8f5e9';
-      case 'REJECTED': return '#ffebee';
-      default: return '#f1f1f1';
+
+  background-color: ${(props) => {
+    switch (props.status) {
+      case "PENDING":
+        return "#fff8e1";
+      case "VERIFIED":
+        return "#e3f2fd";
+      case "APPROVED":
+        return "#e8f5e9";
+      case "REJECTED":
+        return "#ffebee";
+      default:
+        return "#f1f1f1";
     }
   }};
-  
-  color: ${props => {
-    switch(props.status) {
-      case 'PENDING': return '#f57c00';
-      case 'VERIFIED': return '#1976d2';
-      case 'APPROVED': return '#2e7d32';
-      case 'REJECTED': return '#c62828';
-      default: return '#757575';
+
+  color: ${(props) => {
+    switch (props.status) {
+      case "PENDING":
+        return "#f57c00";
+      case "VERIFIED":
+        return "#1976d2";
+      case "APPROVED":
+        return "#2e7d32";
+      case "REJECTED":
+        return "#c62828";
+      default:
+        return "#757575";
     }
   }};
 `;
@@ -193,13 +203,18 @@ const StatusMessage = styled.div<{ status: string }>`
   margin-top: 0.8rem;
   font-size: 0.95rem;
   line-height: 1.5;
-  color: ${props => {
-    switch(props.status) {
-      case 'PENDING': return '#f57c00';
-      case 'VERIFIED': return '#1976d2';
-      case 'APPROVED': return '#2e7d32';
-      case 'REJECTED': return '#c62828';
-      default: return '#757575';
+  color: ${(props) => {
+    switch (props.status) {
+      case "PENDING":
+        return "#f57c00";
+      case "VERIFIED":
+        return "#1976d2";
+      case "APPROVED":
+        return "#2e7d32";
+      case "REJECTED":
+        return "#c62828";
+      default:
+        return "#757575";
     }
   }};
 `;
@@ -216,21 +231,29 @@ const TimelineTitle = styled.h3`
   margin-bottom: 1rem;
 `;
 
-const TimelineStep = styled.div<{ active: boolean; completed?: boolean; rejected?: boolean }>`
+const TimelineStep = styled.div<{
+  active: boolean;
+  completed?: boolean;
+  rejected?: boolean;
+}>`
   display: flex;
   align-items: flex-start;
   margin-bottom: 1.5rem;
-  opacity: ${props => props.active ? 1 : 0.5};
+  opacity: ${(props) => (props.active ? 1 : 0.5)};
 `;
 
-const TimelineIcon = styled.div<{ active: boolean; completed?: boolean; rejected?: boolean }>`
+const TimelineIcon = styled.div<{
+  active: boolean;
+  completed?: boolean;
+  rejected?: boolean;
+}>`
   width: 30px;
   height: 30px;
   border-radius: 50%;
-  background-color: ${props => {
-    if (props.rejected) return '#e74c3c';
-    if (props.completed) return '#2ecc71';
-    return props.active ? '#3498db' : '#e0e0e0';
+  background-color: ${(props) => {
+    if (props.rejected) return "#e74c3c";
+    if (props.completed) return "#2ecc71";
+    return props.active ? "#3498db" : "#e0e0e0";
   }};
   color: white;
   display: flex;
@@ -316,7 +339,7 @@ const Button = styled.button`
   background-color: #3498db;
   color: white;
   font-size: 1rem;
-  
+
   &:hover {
     background-color: #2980b9;
     transform: translateY(-2px);
@@ -328,14 +351,16 @@ const LoadingSpinner = styled.div`
   display: inline-block;
   width: 60px;
   height: 60px;
-  border: 4px solid rgba(0,0,0,0.1);
+  border: 4px solid rgba(0, 0, 0, 0.1);
   border-radius: 50%;
   border-top-color: #3498db;
   animation: spin 1s ease-in-out infinite;
   margin: 4rem auto;
-  
+
   @keyframes spin {
-    to { transform: rotate(360deg); }
+    to {
+      transform: rotate(360deg);
+    }
   }
 `;
 
@@ -362,7 +387,7 @@ const RefreshButton = styled.button`
   margin-bottom: 1.5rem;
   padding: 0.5rem 1rem;
   border-radius: 20px;
-  
+
   &:hover {
     background-color: #f0f7ff;
   }
@@ -381,177 +406,191 @@ const ApplicationStatusPage: React.FC = () => {
   const [applications, setApplications] = useState<Application[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
-  
+
   const navigate = useNavigate();
-  const userEmail = localStorage.getItem('email');
-  
+  const userEmail = localStorage.getItem("email");
+
   useEffect(() => {
     if (!userEmail) {
-      navigate('/login');
+      navigate("/login");
       return;
     }
-    
+
     fetchApplications();
   }, [navigate, userEmail]);
-  
+
   const fetchApplications = async () => {
     setLoading(true);
     setError(null);
-    
+
     try {
-      const response = await axios.get(`http://localhost:3000/applications/${userEmail}`);
+      const response = await axios.get(
+        `https://loanapproval-backend.onrender.com/applications/${userEmail}`
+      );
       // Temporarily transform the data to work with our enhanced status system
       // In production, the backend would return the correct format
       const transformedData = response.data.map((app: ApiApplication) => {
         // Map PENDING and VERIFIED statuses directly
-        if (app.application_status === 'PENDING' || app.application_status === 'VERIFIED') {
+        if (
+          app.application_status === "PENDING" ||
+          app.application_status === "VERIFIED"
+        ) {
           return app as Application;
         }
-        
+
         // If it's REJECTED, determine who rejected it (randomly for demo)
-        if (app.application_status === 'REJECTED') {
+        if (app.application_status === "REJECTED") {
           return {
             ...app,
-            rejected_by: Math.random() > 0.5 ? 'VERIFIER' as const : 'ADMIN' as const
+            rejected_by:
+              Math.random() > 0.5 ? ("VERIFIER" as const) : ("ADMIN" as const),
           } as Application;
         }
-        
+
         // If status is VERIFIED in your current system, randomly make some APPROVED for demo
-        if (app.application_status === 'VERIFIED' && Math.random() > 0.5) {
+        if (app.application_status === "VERIFIED" && Math.random() > 0.5) {
           return {
             ...app,
-            application_status: 'APPROVED' as const
+            application_status: "APPROVED" as const,
           } as Application;
         }
-        
+
         return app as Application;
       });
-      
+
       setApplications(transformedData);
     } catch (error: unknown) {
-      console.error('Error fetching applications:', error);
-      
+      console.error("Error fetching applications:", error);
+
       let errorMessage = "Failed to fetch applications. Please try again.";
       if (error instanceof Error) {
         errorMessage = error.message;
       }
-      
+
       setError(errorMessage);
     } finally {
       setLoading(false);
     }
   };
-  
+
   const handleBackToDashboard = () => {
-    navigate('/dashboard');
+    navigate("/dashboard");
   };
-  
+
   const handleApplyLoan = () => {
-    navigate('/form');
+    navigate("/form");
   };
-  
+
   const formatDate = (dateString: string) => {
     const date = new Date(dateString);
-    return date.toLocaleDateString('en-US', {
-      year: 'numeric',
-      month: 'long',
-      day: 'numeric'
+    return date.toLocaleDateString("en-US", {
+      year: "numeric",
+      month: "long",
+      day: "numeric",
     });
   };
-  
+
   const getStatusLabel = (status: string, rejectedBy?: string) => {
-    switch(status) {
-      case 'PENDING': return 'Pending Review';
-      case 'VERIFIED': return 'Verified by Verifier';
-      case 'APPROVED': return 'Approved by Admin';
-      case 'REJECTED': return rejectedBy === 'VERIFIER' ? 'Rejected by Verifier' : 'Rejected by Admin';
-      default: return status;
+    switch (status) {
+      case "PENDING":
+        return "Pending Review";
+      case "VERIFIED":
+        return "Verified by Verifier";
+      case "APPROVED":
+        return "Approved by Admin";
+      case "REJECTED":
+        return rejectedBy === "VERIFIER"
+          ? "Rejected by Verifier"
+          : "Rejected by Admin";
+      default:
+        return status;
     }
   };
-  
+
   const getStatusMessage = (status: string, rejectedBy?: string) => {
-    switch(status) {
-      case 'PENDING': 
-        return 'Your application is currently waiting for review by our verification team.';
-      case 'VERIFIED': 
-        return 'Your application has been verified by our verification team. It is now awaiting final approval from an admin.';
-      case 'APPROVED': 
-        return 'Congratulations! Your loan application has been verified by our team and approved by an admin. We will process the disbursement shortly.';
-      case 'REJECTED': 
-        if (rejectedBy === 'VERIFIER') {
-          return 'We regret to inform you that your application did not pass our verification process. Please contact our support team for more details.';
+    switch (status) {
+      case "PENDING":
+        return "Your application is currently waiting for review by our verification team.";
+      case "VERIFIED":
+        return "Your application has been verified by our verification team. It is now awaiting final approval from an admin.";
+      case "APPROVED":
+        return "Congratulations! Your loan application has been verified by our team and approved by an admin. We will process the disbursement shortly.";
+      case "REJECTED":
+        if (rejectedBy === "VERIFIER") {
+          return "We regret to inform you that your application did not pass our verification process. Please contact our support team for more details.";
         } else {
-          return 'We regret to inform you that your application was not approved by our admin team. Please contact our support team for more details.';
+          return "We regret to inform you that your application was not approved by our admin team. Please contact our support team for more details.";
         }
-      default: 
-        return '';
+      default:
+        return "";
     }
   };
-  
+
   const renderTimeline = (status: string, rejectedBy?: string) => {
     // Define our steps based on the application status
     const steps = [
       {
-        id: 'submitted',
-        label: 'Application Submitted',
-        description: 'Your loan application has been successfully submitted.',
+        id: "submitted",
+        label: "Application Submitted",
+        description: "Your loan application has been successfully submitted.",
         active: true,
-        completed: true
+        completed: true,
       },
       {
-        id: 'verification',
-        label: 'Verification Review',
-        description: 'Our verifier team reviews your application details.',
+        id: "verification",
+        label: "Verification Review",
+        description: "Our verifier team reviews your application details.",
         active: true,
-        completed: status !== 'PENDING',
-        rejected: status === 'REJECTED' && rejectedBy === 'VERIFIER'
+        completed: status !== "PENDING",
+        rejected: status === "REJECTED" && rejectedBy === "VERIFIER",
       },
       {
-        id: 'admin',
-        label: 'Admin Approval',
-        description: 'Admin reviews verified applications for final approval.',
-        active: status === 'VERIFIED' || status === 'APPROVED' || (status === 'REJECTED' && rejectedBy === 'ADMIN'),
-        completed: status === 'APPROVED',
-        rejected: status === 'REJECTED' && rejectedBy === 'ADMIN'
+        id: "admin",
+        label: "Admin Approval",
+        description: "Admin reviews verified applications for final approval.",
+        active:
+          status === "VERIFIED" ||
+          status === "APPROVED" ||
+          (status === "REJECTED" && rejectedBy === "ADMIN"),
+        completed: status === "APPROVED",
+        rejected: status === "REJECTED" && rejectedBy === "ADMIN",
       },
       {
-        id: 'disbursement',
-        label: 'Loan Disbursement',
-        description: 'Funds will be transferred to your account.',
-        active: status === 'APPROVED',
-        completed: false
-      }
+        id: "disbursement",
+        label: "Loan Disbursement",
+        description: "Funds will be transferred to your account.",
+        active: status === "APPROVED",
+        completed: false,
+      },
     ];
-    
+
     return (
       <StatusTimeline>
         <TimelineTitle>Application Timeline</TimelineTitle>
         {steps.map((step, index) => (
           <React.Fragment key={step.id}>
-            <TimelineStep 
-              active={step.active} 
-            >
-              <TimelineIcon 
-                active={step.active} 
+            <TimelineStep active={step.active}>
+              <TimelineIcon
+                active={step.active}
                 completed={step.completed}
                 rejected={step.rejected}
               >
-                {step.rejected ? '✕' : step.completed ? '✓' : index + 1}
+                {step.rejected ? "✕" : step.completed ? "✓" : index + 1}
               </TimelineIcon>
               <TimelineContent>
                 <TimelineLabel>
-                  {step.rejected 
-                    ? (step.id === 'verification' ? 'Rejected by Verifier' : 'Rejected by Admin') 
+                  {step.rejected
+                    ? step.id === "verification"
+                      ? "Rejected by Verifier"
+                      : "Rejected by Admin"
                     : step.label}
                 </TimelineLabel>
-                <TimelineDescription>
-                  {step.description}
-                </TimelineDescription>
+                <TimelineDescription>{step.description}</TimelineDescription>
                 {step.rejected && (
                   <RejectionInfo>
-                    {rejectedBy === 'VERIFIER' 
-                      ? 'Your application did not meet our verification criteria.' 
-                      : 'Your application did not receive admin approval.'}
+                    {rejectedBy === "VERIFIER"
+                      ? "Your application did not meet our verification criteria."
+                      : "Your application did not receive admin approval."}
                   </RejectionInfo>
                 )}
               </TimelineContent>
@@ -564,21 +603,23 @@ const ApplicationStatusPage: React.FC = () => {
       </StatusTimeline>
     );
   };
-  
+
   return (
     <PageContainer>
       <Header>
         <Logo>
           Loan<span>System</span>
         </Logo>
-        <BackButton onClick={handleBackToDashboard}>← Back to Dashboard</BackButton>
+        <BackButton onClick={handleBackToDashboard}>
+          ← Back to Dashboard
+        </BackButton>
       </Header>
-      
+
       <MainContent>
         <PageTitle>Your Application Status</PageTitle>
-        
+
         {error && <ErrorMessage>{error}</ErrorMessage>}
-        
+
         {loading ? (
           <LoadingSpinner />
         ) : (
@@ -588,53 +629,65 @@ const ApplicationStatusPage: React.FC = () => {
                 <RefreshButton onClick={fetchApplications}>
                   🔄 Refresh Applications
                 </RefreshButton>
-                
-                {applications.map(app => (
+
+                {applications.map((app) => (
                   <ApplicationCard key={app.id}>
                     <ApplicationHeader>
                       <ApplicationID>Application #{app.id}</ApplicationID>
-                      <ApplicationDate>Submitted on {formatDate(app.createdAt)}</ApplicationDate>
+                      <ApplicationDate>
+                        Submitted on {formatDate(app.createdAt)}
+                      </ApplicationDate>
                     </ApplicationHeader>
-                    
+
                     <ApplicationDetails>
                       <DetailItem>
                         <DetailLabel>Applicant Name</DetailLabel>
                         <DetailValue>{app.name}</DetailValue>
                       </DetailItem>
-                      
+
                       <DetailItem>
                         <DetailLabel>Loan Amount</DetailLabel>
-                        <DetailValue>${app.amount.toLocaleString()}</DetailValue>
+                        <DetailValue>
+                          ${app.amount.toLocaleString()}
+                        </DetailValue>
                       </DetailItem>
-                      
+
                       <DetailItem>
                         <DetailLabel>Tenure</DetailLabel>
                         <DetailValue>{app.tenure} months</DetailValue>
                       </DetailItem>
-                      
+
                       <DetailItem>
                         <DetailLabel>Current Status</DetailLabel>
                         <DetailValue>
                           <StatusBadge status={app.application_status}>
-                            {getStatusLabel(app.application_status, app.rejected_by)}
+                            {getStatusLabel(
+                              app.application_status,
+                              app.rejected_by
+                            )}
                           </StatusBadge>
                           <StatusMessage status={app.application_status}>
-                            {getStatusMessage(app.application_status, app.rejected_by)}
+                            {getStatusMessage(
+                              app.application_status,
+                              app.rejected_by
+                            )}
                           </StatusMessage>
                         </DetailValue>
                       </DetailItem>
-                      
+
                       <DetailItem>
                         <DetailLabel>Purpose</DetailLabel>
                         <DetailValue>{app.reason}</DetailValue>
                       </DetailItem>
-                      
+
                       <DetailItem>
                         <DetailLabel>Employment</DetailLabel>
-                        <DetailValue>{app.employment_status ? 'Employed' : 'Not Employed'}</DetailValue>
+                        <DetailValue>
+                          {app.employment_status ? "Employed" : "Not Employed"}
+                        </DetailValue>
                       </DetailItem>
                     </ApplicationDetails>
-                    
+
                     {renderTimeline(app.application_status, app.rejected_by)}
                   </ApplicationCard>
                 ))}
@@ -642,19 +695,37 @@ const ApplicationStatusPage: React.FC = () => {
             ) : (
               <NoApplications>
                 <EmptyIcon>
-                  <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M19 5H5C3.89543 5 3 5.89543 3 7V17C3 18.1046 3.89543 19 5 19H19C20.1046 19 21 18.1046 21 17V7C21 5.89543 20.1046 5 19 5Z" stroke="#7f8c8d" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                    <path d="M3 7L12 13L21 7" stroke="#7f8c8d" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                  <svg
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      d="M19 5H5C3.89543 5 3 5.89543 3 7V17C3 18.1046 3.89543 19 5 19H19C20.1046 19 21 18.1046 21 17V7C21 5.89543 20.1046 5 19 5Z"
+                      stroke="#7f8c8d"
+                      strokeWidth="2"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    />
+                    <path
+                      d="M3 7L12 13L21 7"
+                      stroke="#7f8c8d"
+                      strokeWidth="2"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    />
                   </svg>
                 </EmptyIcon>
-                <EmptyText>You haven't submitted any loan applications yet.</EmptyText>
+                <EmptyText>
+                  You haven't submitted any loan applications yet.
+                </EmptyText>
                 <Button onClick={handleApplyLoan}>Apply for a Loan</Button>
               </NoApplications>
             )}
           </>
         )}
       </MainContent>
-      
+
       <Footer>
         &copy; {new Date().getFullYear()} Loan System. All rights reserved.
       </Footer>

@@ -1,343 +1,3 @@
-// import React, { useState, useEffect } from "react";
-// import styled from "styled-components";
-// import axios from "axios";
-
-// // Styled Components
-// const FormContainer = styled.div`
-//   width: 100%;
-//   max-width: 600px;
-//   margin: 0 auto;
-//   padding: 20px;
-//   border-radius: 5px;
-//   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-//   background-color: white;
-// `;
-
-// const Title = styled.h1`
-//   text-align: center;
-//   margin-bottom: 20px;
-//   font-size: 24px;
-//   font-weight: 600;
-// `;
-
-// const FormGroup = styled.div`
-//   margin-bottom: 15px;
-// `;
-
-// const Label = styled.label`
-//   display: block;
-//   margin-bottom: 5px;
-//   font-size: 14px;
-// `;
-
-// const Input = styled.input`
-//   width: 100%;
-//   padding: 10px;
-//   border: 1px solid #ddd;
-//   border-radius: 4px;
-//   font-size: 14px;
-//   box-sizing: border-box;
-// `;
-
-// const TextArea = styled.textarea`
-//   width: 100%;
-//   padding: 10px;
-//   border: 1px solid #ddd;
-//   border-radius: 4px;
-//   font-size: 14px;
-//   box-sizing: border-box;
-//   min-height: 80px;
-//   resize: vertical;
-// `;
-
-// const CheckboxContainer = styled.div`
-//   display: flex;
-//   align-items: flex-start;
-//   margin-bottom: 10px;
-// `;
-
-// const CheckboxInput = styled.input`
-//   margin-right: 10px;
-//   margin-top: 4px;
-// `;
-
-// const CheckboxLabel = styled.label`
-//   font-size: 14px;
-//   line-height: 1.4;
-// `;
-
-// const SubmitButton = styled.button<{ disabled: boolean }>`
-//   background-color: ${(props) => (props.disabled ? "#cccccc" : "#006400")};
-//   color: white;
-//   padding: 10px 15px;
-//   border: none;
-//   border-radius: 4px;
-//   cursor: ${(props) => (props.disabled ? "not-allowed" : "pointer")};
-//   font-size: 16px;
-//   width: 100%;
-
-//   &:hover {
-//     background-color: ${(props) => (props.disabled ? "#cccccc" : "#004d00")};
-//   }
-// `;
-
-// const Row = styled.div`
-//   display: flex;
-//   gap: 20px;
-
-//   @media (max-width: 768px) {
-//     flex-direction: column;
-//   }
-// `;
-
-// const ChartContainer = styled.div`
-//   margin: 20px 0;
-//   border: 1px solid #ddd;
-//   padding: 10px;
-//   border-radius: 4px;
-// `;
-
-// interface FormData {
-//   fullName: string;
-//   amount: string;
-//   loanTenure: string;
-//   employmentStatus: string;
-//   reason: string;
-//   employmentAddress1: string;
-//   employmentAddress2: string;
-//   email: string;
-//   termsChecked: boolean;
-//   creditInfoChecked: boolean;
-// }
-
-// const LoanApplicationForm: React.FC = () => {
-//   const [formData, setFormData] = useState<FormData>({
-//     fullName: "",
-//     amount: "",
-//     loanTenure: "",
-//     employmentStatus: "",
-//     reason: "",
-//     employmentAddress1: "",
-//     employmentAddress2: "",
-//     email: "",
-//     termsChecked: false,
-//     creditInfoChecked: false,
-//   });
-
-//   const [loading, setLoading] = useState<boolean>(false);
-//   const [submitted, setSubmitted] = useState<boolean>(false);
-
-//   // Get email from localStorage on component mount
-//   useEffect(() => {
-//     const storedEmail = localStorage.getItem("email");
-//     if (storedEmail) {
-//       setFormData((prevData) => ({
-//         ...prevData,
-//         email: storedEmail,
-//       }));
-//     }
-//   }, []);
-
-//   const handleInputChange = (
-//     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-//   ) => {
-//     const { name, value } = e.target;
-//     setFormData((prevData) => ({
-//       ...prevData,
-//       [name]: value,
-//     }));
-//   };
-
-//   const handleCheckboxChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-//     const { name, checked } = e.target;
-//     setFormData((prevData) => ({
-//       ...prevData,
-//       [name]: checked,
-//     }));
-//   };
-
-//   const handleSubmit = async (e: React.FormEvent) => {
-//     e.preventDefault();
-
-//     if (!formData.termsChecked || !formData.creditInfoChecked) {
-//       return;
-//     }
-
-//     setLoading(true);
-
-//     try {
-//       // Get email from localStorage if not already in form data
-//       const email = formData.email || localStorage.getItem("email");
-
-//       if (!email) {
-//         throw new Error("No email found. Please login first.");
-//       }
-
-//       const response = await axios.post("http://localhost:3000/apply", {
-//         ...formData,
-//         email,
-//       });
-
-//       console.log("Form submitted successfully:", response.data);
-//       setSubmitted(true);
-//     } catch (error) {
-//       console.error("Error submitting form:", error);
-//     } finally {
-//       setLoading(false);
-//     }
-//   };
-
-//   if (submitted) {
-//     return (
-//       <FormContainer>
-//         <Title>Thank you for your application!</Title>
-//         <p>
-//           Your loan application has been submitted successfully. We will review
-//           your application and get back to you soon.
-//         </p>
-//       </FormContainer>
-//     );
-//   }
-
-//   return (
-//     <FormContainer>
-//       <Title>APPLY FOR A LOAN</Title>
-//       <form onSubmit={handleSubmit}>
-//         <Row>
-//           <FormGroup>
-//             <Label>Full name as it appears on bank account</Label>
-//             <Input
-//               type="text"
-//               name="fullName"
-//               value={formData.fullName}
-//               onChange={handleInputChange}
-//               placeholder="Full name as it appears on bank account"
-//               required
-//             />
-//           </FormGroup>
-//           <FormGroup>
-//             <Label>How much do you need?</Label>
-//             <Input
-//               type="number"
-//               name="amount"
-//               value={formData.amount}
-//               onChange={handleInputChange}
-//               placeholder="How much do you need?"
-//               required
-//             />
-//           </FormGroup>
-//         </Row>
-
-//         <Row>
-//           <FormGroup>
-//             <Label>Loan tenure (in months)</Label>
-//             <Input
-//               type="number"
-//               name="loanTenure"
-//               value={formData.loanTenure}
-//               onChange={handleInputChange}
-//               placeholder="Loan tenure (in months)"
-//               required
-//             />
-//           </FormGroup>
-//           <FormGroup>
-//             <Label>Employment status</Label>
-//             <Input
-//               type="text"
-//               name="employmentStatus"
-//               value={formData.employmentStatus}
-//               onChange={handleInputChange}
-//               placeholder="Employment status"
-//               required
-//             />
-//           </FormGroup>
-//         </Row>
-
-//         <Row>
-//           <FormGroup>
-//             <Label>Reason for loan</Label>
-//             <TextArea
-//               name="reason"
-//               value={formData.reason}
-//               onChange={handleInputChange}
-//               placeholder="Reason for loan"
-//               required
-//             />
-//           </FormGroup>
-//           <div>
-//             <FormGroup>
-//               <Label>Employment address</Label>
-//               <Input
-//                 type="text"
-//                 name="employmentAddress1"
-//                 value={formData.employmentAddress1}
-//                 onChange={handleInputChange}
-//                 placeholder="Employment address"
-//                 required
-//               />
-//             </FormGroup>
-//             <FormGroup>
-//               <Label>Employment address</Label>
-//               <Input
-//                 type="text"
-//                 name="employmentAddress2"
-//                 value={formData.employmentAddress2}
-//                 onChange={handleInputChange}
-//                 placeholder="Employment address"
-//               />
-//             </FormGroup>
-//           </div>
-//         </Row>
-
-//         <ChartContainer>
-//           <div>Chart</div>
-//           {/* A placeholder for the chart, you'll need to implement the actual chart component */}
-//         </ChartContainer>
-
-//         <CheckboxContainer>
-//           <CheckboxInput
-//             type="checkbox"
-//             name="termsChecked"
-//             checked={formData.termsChecked}
-//             onChange={handleCheckboxChange}
-//             id="terms"
-//           />
-//           <CheckboxLabel htmlFor="terms">
-//             I have read the important information and accept that by completing
-//             the application I will be bound by the terms
-//           </CheckboxLabel>
-//         </CheckboxContainer>
-
-//         <CheckboxContainer>
-//           <CheckboxInput
-//             type="checkbox"
-//             name="creditInfoChecked"
-//             checked={formData.creditInfoChecked}
-//             onChange={handleCheckboxChange}
-//             id="creditInfo"
-//           />
-//           <CheckboxLabel htmlFor="creditInfo">
-//             Any personal and credit information obtained may be disclosed from
-//             time to time to other lenders, credit bureaus or other credit
-//             reporting agencies
-//           </CheckboxLabel>
-//         </CheckboxContainer>
-
-//         <SubmitButton
-//           type="submit"
-//           disabled={
-//             !formData.termsChecked || !formData.creditInfoChecked || loading
-//           }
-//         >
-//           {loading ? "Submitting..." : "Submit"}
-//         </SubmitButton>
-//       </form>
-//     </FormContainer>
-//   );
-// };
-
-// export default LoanApplicationForm;
-
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import axios from "axios";
@@ -371,7 +31,7 @@ const Logo = styled.div`
   font-size: 1.8rem;
   font-weight: 700;
   color: #2c3e50;
-  
+
   span {
     color: #3498db;
   }
@@ -386,7 +46,7 @@ const BackButton = styled.button`
   color: #3498db;
   cursor: pointer;
   font-size: 1rem;
-  
+
   &:hover {
     text-decoration: underline;
   }
@@ -440,7 +100,7 @@ const Input = styled.input`
   font-size: 1rem;
   box-sizing: border-box;
   transition: border-color 0.3s;
-  
+
   &:focus {
     outline: none;
     border-color: #3498db;
@@ -457,7 +117,7 @@ const TextArea = styled.textarea`
   min-height: 100px;
   resize: vertical;
   transition: border-color 0.3s;
-  
+
   &:focus {
     outline: none;
     border-color: #3498db;
@@ -471,7 +131,7 @@ const CheckboxContainer = styled.div`
   padding: 0.5rem;
   border-radius: 6px;
   transition: background-color 0.2s;
-  
+
   &:hover {
     background-color: #f8f9fa;
   }
@@ -633,10 +293,13 @@ const LoanApplicationForm: React.FC = () => {
         throw new Error("No email found. Please login first.");
       }
 
-      const response = await axios.post("http://localhost:3000/apply", {
-        ...formData,
-        email,
-      });
+      const response = await axios.post(
+        `https://loanapproval-backend.onrender.com/apply`,
+        {
+          ...formData,
+          email,
+        }
+      );
 
       console.log("Form submitted successfully:", response.data);
       setSubmitted(true);
@@ -648,7 +311,7 @@ const LoanApplicationForm: React.FC = () => {
   };
 
   const handleBackToDashboard = () => {
-    navigate('/dashboard');
+    navigate("/dashboard");
   };
 
   if (submitted) {
@@ -658,7 +321,9 @@ const LoanApplicationForm: React.FC = () => {
           <Logo>
             Loan<span>System</span>
           </Logo>
-          <BackButton onClick={handleBackToDashboard}>← Back to Dashboard</BackButton>
+          <BackButton onClick={handleBackToDashboard}>
+            ← Back to Dashboard
+          </BackButton>
         </Header>
         <MainContent>
           <FormContainer>
@@ -666,8 +331,8 @@ const LoanApplicationForm: React.FC = () => {
             <SuccessContainer>
               <div>✅</div>
               <SuccessMessage>
-                Your loan application has been submitted successfully. We will review
-                your application and get back to you soon.
+                Your loan application has been submitted successfully. We will
+                review your application and get back to you soon.
               </SuccessMessage>
               <ReturnButton onClick={handleBackToDashboard}>
                 Return to Dashboard
@@ -688,7 +353,9 @@ const LoanApplicationForm: React.FC = () => {
         <Logo>
           Loan<span>System</span>
         </Logo>
-        <BackButton onClick={handleBackToDashboard}>← Back to Dashboard</BackButton>
+        <BackButton onClick={handleBackToDashboard}>
+          ← Back to Dashboard
+        </BackButton>
       </Header>
       <MainContent>
         <FormContainer>
@@ -788,8 +455,8 @@ const LoanApplicationForm: React.FC = () => {
                 id="terms"
               />
               <CheckboxLabel htmlFor="terms">
-                I have read the important information and accept that by completing
-                the application I will be bound by the terms
+                I have read the important information and accept that by
+                completing the application I will be bound by the terms
               </CheckboxLabel>
             </CheckboxContainer>
 
@@ -802,9 +469,9 @@ const LoanApplicationForm: React.FC = () => {
                 id="creditInfo"
               />
               <CheckboxLabel htmlFor="creditInfo">
-                Any personal and credit information obtained may be disclosed from
-                time to time to other lenders, credit bureaus or other credit
-                reporting agencies
+                Any personal and credit information obtained may be disclosed
+                from time to time to other lenders, credit bureaus or other
+                credit reporting agencies
               </CheckboxLabel>
             </CheckboxContainer>
 

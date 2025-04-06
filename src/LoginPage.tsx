@@ -233,11 +233,14 @@ const LoginPage: React.FC = () => {
       const userRole = role || "user";
 
       // Send login request with email, password and role
-      const response = await axios.post("http://localhost:3000/login", {
-        email: formData.email,
-        password: formData.password,
-        role: userRole, // Send the role to the backend
-      });
+      const response = await axios.post(
+        `https://loanapproval-backend.onrender.com/login`,
+        {
+          email: formData.email,
+          password: formData.password,
+          role: userRole, // Send the role to the backend
+        }
+      );
 
       console.log("Login successful:", response.data);
 

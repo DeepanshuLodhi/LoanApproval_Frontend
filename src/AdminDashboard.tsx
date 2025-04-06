@@ -1,5 +1,3 @@
-
-
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import styled from "styled-components";
@@ -90,7 +88,7 @@ const LogoutButton = styled.button`
     transform: translateY(-2px);
     box-shadow: 0 6px 8px rgba(231, 76, 60, 0.3);
   }
-  
+
   &:active {
     transform: translateY(1px);
   }
@@ -167,7 +165,7 @@ const Card = styled.div`
   transition: transform 0.3s, box-shadow 0.3s;
   width: 100%;
   max-width: 900px;
-  
+
   &:hover {
     transform: translateY(-5px);
     box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1);
@@ -402,7 +400,7 @@ const AdminDashboard: React.FC = () => {
     setLoading(true);
     try {
       const response = await axios.get(
-        "http://localhost:3000/applications/admin"
+        `https://loanapproval-backend.onrender.com/applications/admin`
       );
       setApplications(response.data);
     } catch (error) {
@@ -435,7 +433,7 @@ const AdminDashboard: React.FC = () => {
 
     try {
       await axios.put(
-        `http://localhost:3000/applications/admin/update-status/${selectedApplication.id}`,
+        `https://loanapproval-backend.onrender.com/applications/admin/update-status/${selectedApplication.id}`,
         {
           status: selectedStatus,
           adminEmail: userEmail,
@@ -514,7 +512,8 @@ const AdminDashboard: React.FC = () => {
         <ApplicationsHeader>
           <ApplicationsTitle>Verified Applications</ApplicationsTitle>
           <ApplicationsCount>
-            {applications.length} application{applications.length !== 1 ? "s" : ""} found
+            {applications.length} application
+            {applications.length !== 1 ? "s" : ""} found
           </ApplicationsCount>
         </ApplicationsHeader>
 
@@ -585,14 +584,18 @@ const AdminDashboard: React.FC = () => {
                       <ButtonGroup>
                         <ActionButton
                           color="#e74c3c"
-                          onClick={() => openStatusModal(application, "REJECTED")}
+                          onClick={() =>
+                            openStatusModal(application, "REJECTED")
+                          }
                           disabled={processingId === application.id}
                         >
                           Reject
                         </ActionButton>
                         <ActionButton
                           color="#3498db"
-                          onClick={() => openStatusModal(application, "APPROVED")}
+                          onClick={() =>
+                            openStatusModal(application, "APPROVED")
+                          }
                           disabled={processingId === application.id}
                         >
                           Approve

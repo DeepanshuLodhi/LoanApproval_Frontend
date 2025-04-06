@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import styled from "styled-components";
@@ -89,7 +88,7 @@ const LogoutButton = styled.button`
     transform: translateY(-2px);
     box-shadow: 0 6px 8px rgba(231, 76, 60, 0.3);
   }
-  
+
   &:active {
     transform: translateY(1px);
   }
@@ -131,7 +130,8 @@ const Tab = styled.button<{ active: boolean }>`
   padding: 1.2rem 2.5rem;
   background: none;
   border: none;
-  border-bottom: 3px solid ${(props) => (props.active ? "#27ae60" : "transparent")};
+  border-bottom: 3px solid
+    ${(props) => (props.active ? "#27ae60" : "transparent")};
   color: ${(props) => (props.active ? "#27ae60" : "#7f8c8d")};
   font-size: 1.1rem;
   font-weight: 600;
@@ -166,7 +166,7 @@ const Card = styled.div`
   transition: transform 0.3s, box-shadow 0.3s;
   width: 100%;
   max-width: 900px;
-  
+
   &:hover {
     transform: translateY(-5px);
     box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1);
@@ -403,8 +403,8 @@ const VerifierDashboard: React.FC = () => {
     try {
       const endpoint =
         activeTab === "all"
-          ? "http://localhost:3000/applications/verifier"
-          : "http://localhost:3000/applications/verifier/pending";
+          ? `https://loanapproval-backend.onrender.com/applications/verifier`
+          : `https://loanapproval-backend.onrender.com/applications/verifier/pending`;
 
       const response = await axios.get(endpoint);
       setApplications(response.data);
@@ -438,7 +438,7 @@ const VerifierDashboard: React.FC = () => {
 
     try {
       await axios.put(
-        `http://localhost:3000/applications/verifier/update-status/${selectedApplication.id}`,
+        `https://loanapproval-backend.onrender.com/applications/verifier/update-status/${selectedApplication.id}`,
         {
           status: selectedStatus,
           verifierEmail: userEmail,
@@ -592,14 +592,18 @@ const VerifierDashboard: React.FC = () => {
                         <>
                           <ActionButton
                             color="#e74c3c"
-                            onClick={() => openStatusModal(application, "REJECTED")}
+                            onClick={() =>
+                              openStatusModal(application, "REJECTED")
+                            }
                             disabled={processingId === application.id}
                           >
                             Reject
                           </ActionButton>
                           <ActionButton
                             color="#27ae60"
-                            onClick={() => openStatusModal(application, "VERIFIED")}
+                            onClick={() =>
+                              openStatusModal(application, "VERIFIED")
+                            }
                             disabled={processingId === application.id}
                           >
                             Verify
@@ -609,7 +613,9 @@ const VerifierDashboard: React.FC = () => {
                       {application.application_status === "VERIFIED" && (
                         <ActionButton
                           color="#e74c3c"
-                          onClick={() => openStatusModal(application, "REJECTED")}
+                          onClick={() =>
+                            openStatusModal(application, "REJECTED")
+                          }
                           disabled={processingId === application.id}
                         >
                           Reject
@@ -618,7 +624,9 @@ const VerifierDashboard: React.FC = () => {
                       {application.application_status === "REJECTED" && (
                         <ActionButton
                           color="#27ae60"
-                          onClick={() => openStatusModal(application, "VERIFIED")}
+                          onClick={() =>
+                            openStatusModal(application, "VERIFIED")
+                          }
                           disabled={processingId === application.id}
                         >
                           Verify
@@ -661,7 +669,7 @@ const VerifierDashboard: React.FC = () => {
             </>
           )}
         </ContentWrapper>
-        
+
         {showModal && selectedApplication && (
           <ModalOverlay>
             <ModalContent>
@@ -685,8 +693,8 @@ const VerifierDashboard: React.FC = () => {
               )}
               {selectedStatus === "VERIFIED" && (
                 <p style={{ marginTop: "1rem", color: "#27ae60" }}>
-                  This action will mark the application as verified and forward it
-                  to admin for final approval.
+                  This action will mark the application as verified and forward
+                  it to admin for final approval.
                 </p>
               )}
               <ModalButtonGroup>
