@@ -403,8 +403,8 @@ const VerifierDashboard: React.FC = () => {
     try {
       const endpoint =
         activeTab === "all"
-          ? `https://loanapproval-backend.onrender.com/applications/verifier`
-          : `https://loanapproval-backend.onrender.com/applications/verifier/pending`;
+          ? `https://visible-hyacinth-deepanshu123-f5df37d1.koyeb.app/applications/verifier`
+          : `https://visible-hyacinth-deepanshu123-f5df37d1.koyeb.app/applications/verifier/pending`;
 
       const response = await axios.get(endpoint);
       setApplications(response.data);
@@ -438,7 +438,7 @@ const VerifierDashboard: React.FC = () => {
 
     try {
       await axios.put(
-        `https://loanapproval-backend.onrender.com/applications/verifier/update-status/${selectedApplication.id}`,
+        `https://visible-hyacinth-deepanshu123-f5df37d1.koyeb.app/applications/verifier/update-status/${selectedApplication.id}`,
         {
           status: selectedStatus,
           verifierEmail: userEmail,

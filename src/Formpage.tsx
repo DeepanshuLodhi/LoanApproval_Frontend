@@ -294,7 +294,7 @@ const LoanApplicationForm: React.FC = () => {
       }
 
       const response = await axios.post(
-        `https://loanapproval-backend.onrender.com/apply`,
+        `https://visible-hyacinth-deepanshu123-f5df37d1.koyeb.app/apply`,
         {
           ...formData,
           email,

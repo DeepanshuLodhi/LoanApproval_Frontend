@@ -400,7 +400,7 @@ const AdminDashboard: React.FC = () => {
     setLoading(true);
     try {
       const response = await axios.get(
-        `https://loanapproval-backend.onrender.com/applications/admin`
+        `https://visible-hyacinth-deepanshu123-f5df37d1.koyeb.app/applications/admin`
       );
       setApplications(response.data);
     } catch (error) {
@@ -433,7 +433,7 @@ const AdminDashboard: React.FC = () => {
 
     try {
       await axios.put(
-        `https://loanapproval-backend.onrender.com/applications/admin/update-status/${selectedApplication.id}`,
+        `https://visible-hyacinth-deepanshu123-f5df37d1.koyeb.app/applications/admin/update-status/${selectedApplication.id}`,
         {
           status: selectedStatus,
           adminEmail: userEmail,

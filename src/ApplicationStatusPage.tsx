@@ -425,7 +425,7 @@ const ApplicationStatusPage: React.FC = () => {
 
     try {
       const response = await axios.get(
-        `https://loanapproval-backend.onrender.com/applications/${userEmail}`
+        `https://visible-hyacinth-deepanshu123-f5df37d1.koyeb.app/applications/${userEmail}`
       );
       // Temporarily transform the data to work with our enhanced status system
       // In production, the backend would return the correct format
