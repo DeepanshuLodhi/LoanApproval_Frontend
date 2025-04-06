@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import styled from "styled-components";
@@ -17,64 +18,122 @@ interface Application {
 }
 
 // Styled Components
+const PageContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  width: 100vw;
+  background-color: #f0f4f8;
+  background-image: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+  align-items: center;
+  overflow-x: hidden;
+  margin: 0;
+  padding: 0;
+`;
+
 const DashboardContainer = styled.div`
-  padding: 2rem;
+  width: 100%;
   max-width: 1200px;
-  margin: 0 auto;
+  box-sizing: border-box;
+  padding: 2rem;
 `;
 
 const Header = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
+  background-color: #ffffff;
+  padding: 1.5rem 2rem;
+  border-radius: 10px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
   margin-bottom: 2rem;
+  width: 100%;
 `;
 
 const Title = styled.h1`
   color: #2c3e50;
   font-size: 2rem;
+  margin: 0;
+  font-weight: 700;
 `;
 
 const UserInfo = styled.div`
   display: flex;
   align-items: center;
-  gap: 1rem;
+  gap: 1.2rem;
+  background-color: #f8fafc;
+  padding: 0.7rem 1.5rem;
+  border-radius: 50px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04);
 `;
 
 const UserEmail = styled.span`
   font-size: 1rem;
-  color: #7f8c8d;
+  color: #4a5568;
+  font-weight: 500;
 `;
 
 const LogoutButton = styled.button`
   background-color: #e74c3c;
   color: white;
   border: none;
-  padding: 0.5rem 1rem;
-  border-radius: 4px;
+  padding: 0.7rem 1.5rem;
+  border-radius: 50px;
   cursor: pointer;
   font-weight: 600;
-  transition: background-color 0.3s;
+  transition: all 0.3s;
+  box-shadow: 0 4px 6px rgba(231, 76, 60, 0.2);
 
   &:hover {
     background-color: #c0392b;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 8px rgba(231, 76, 60, 0.3);
   }
+  
+  &:active {
+    transform: translateY(1px);
+  }
+`;
+
+const MainHeading = styled.div`
+  text-align: center;
+  margin-bottom: 2rem;
+  width: 100%;
+`;
+
+const HeadingTitle = styled.h1`
+  font-size: 2.5rem;
+  color: #2c3e50;
+  margin-bottom: 0.5rem;
+  font-weight: 700;
+`;
+
+const HeadingSubtitle = styled.p`
+  color: #64748b;
+  font-size: 1.1rem;
+  max-width: 600px;
+  margin: 0 auto;
 `;
 
 const TabContainer = styled.div`
   display: flex;
+  justify-content: center;
   margin-bottom: 2rem;
   border-bottom: 1px solid #ecf0f1;
+  background-color: #ffffff;
+  border-radius: 10px 10px 0 0;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+  padding: 0;
+  width: 100%;
 `;
 
 const Tab = styled.button<{ active: boolean }>`
-  padding: 1rem 2rem;
+  padding: 1.2rem 2.5rem;
   background: none;
   border: none;
-  border-bottom: 3px solid
-    ${(props) => (props.active ? "#27ae60" : "transparent")};
+  border-bottom: 3px solid ${(props) => (props.active ? "#27ae60" : "transparent")};
   color: ${(props) => (props.active ? "#27ae60" : "#7f8c8d")};
-  font-size: 1rem;
+  font-size: 1.1rem;
   font-weight: 600;
   cursor: pointer;
   transition: all 0.3s;
@@ -84,19 +143,30 @@ const Tab = styled.button<{ active: boolean }>`
   }
 `;
 
+const ContentWrapper = styled.div`
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+`;
+
 const ApplicationsGrid = styled.div`
-  display: grid;
-  grid-template-columns: 1fr;
+  display: flex;
+  flex-direction: column;
   gap: 1.5rem;
+  align-items: center;
+  width: 100%;
 `;
 
 const Card = styled.div`
   background-color: white;
-  border-radius: 8px;
+  border-radius: 10px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   padding: 1.5rem;
   transition: transform 0.3s, box-shadow 0.3s;
-
+  width: 100%;
+  max-width: 900px;
+  
   &:hover {
     transform: translateY(-5px);
     box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1);
@@ -107,21 +177,22 @@ const CardHeader = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 1rem;
-  padding-bottom: 0.5rem;
+  margin-bottom: 1.5rem;
+  padding-bottom: 0.8rem;
   border-bottom: 1px solid #ecf0f1;
 `;
 
 const CardTitle = styled.h3`
   color: #2c3e50;
-  font-size: 1.2rem;
+  font-size: 1.3rem;
   font-weight: 600;
+  margin: 0;
 `;
 
 const StatusBadge = styled.span<{ status: string }>`
-  padding: 0.3rem 0.8rem;
-  border-radius: 20px;
-  font-size: 0.8rem;
+  padding: 0.4rem 1rem;
+  border-radius: 50px;
+  font-size: 0.9rem;
   font-weight: 600;
   background-color: ${(props) => {
     switch (props.status) {
@@ -138,104 +209,136 @@ const StatusBadge = styled.span<{ status: string }>`
     }
   }};
   color: white;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 `;
 
 const CardContent = styled.div`
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-  gap: 1rem;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1.5rem;
   margin-bottom: 1.5rem;
 `;
 
-const DetailsItem = styled.div``;
+const DetailsItem = styled.div`
+  background-color: #f8fafc;
+  padding: 1rem;
+  border-radius: 8px;
+`;
 
 const DetailsLabel = styled.p`
   font-size: 0.8rem;
   color: #7f8c8d;
-  margin-bottom: 0.3rem;
+  margin: 0 0 0.3rem 0;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
 `;
 
 const DetailsValue = styled.p`
-  font-size: 1rem;
+  font-size: 1.1rem;
   color: #2c3e50;
   font-weight: 500;
+  margin: 0;
+`;
+
+const DetailsFull = styled.div`
+  background-color: #f8fafc;
+  padding: 1rem;
+  border-radius: 8px;
+  margin-bottom: 1.5rem;
 `;
 
 const ButtonGroup = styled.div`
   display: flex;
   gap: 1rem;
   justify-content: flex-end;
+  margin-top: 1.5rem;
 `;
 
 const ActionButton = styled.button<{ color: string }>`
-  padding: 0.5rem 1rem;
+  padding: 0.7rem 1.5rem;
   background-color: ${(props) => props.color};
   color: white;
   border: none;
-  border-radius: 4px;
+  border-radius: 50px;
   font-weight: 600;
   cursor: pointer;
-  transition: opacity 0.3s;
+  transition: all 0.3s;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 
   &:hover {
     opacity: 0.9;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15);
+  }
+
+  &:active {
+    transform: translateY(1px);
   }
 
   &:disabled {
     background-color: #95a5a6;
     cursor: not-allowed;
+    transform: none;
   }
 `;
 
 const EmptyState = styled.div`
   text-align: center;
-  padding: 3rem;
+  padding: 4rem 2rem;
   background-color: white;
-  border-radius: 8px;
+  border-radius: 10px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  max-width: 600px;
 `;
 
 const EmptyStateIcon = styled.div`
-  font-size: 3rem;
-  margin-bottom: 1rem;
+  font-size: 4rem;
+  margin-bottom: 1.5rem;
   color: #bdc3c7;
 `;
 
 const EmptyStateText = styled.p`
-  font-size: 1.2rem;
+  font-size: 1.3rem;
   color: #7f8c8d;
+  margin: 0;
 `;
 
 const LoadingSpinner = styled.div`
   text-align: center;
-  padding: 3rem;
+  padding: 4rem 2rem;
   color: #27ae60;
-  font-size: 1.2rem;
+  font-size: 1.3rem;
+  width: 100%;
 `;
 
 const Pagination = styled.div`
   display: flex;
   justify-content: center;
-  margin-top: 2rem;
+  margin-top: 2.5rem;
+  gap: 0.3rem;
+  width: 100%;
 `;
 
 const PaginationButton = styled.button<{ active?: boolean }>`
   padding: 0.5rem 1rem;
-  margin: 0 0.3rem;
   background-color: ${(props) => (props.active ? "#27ae60" : "white")};
   color: ${(props) => (props.active ? "white" : "#2c3e50")};
-  border: 1px solid #dcdfe6;
-  border-radius: 4px;
+  border: 1px solid ${(props) => (props.active ? "#27ae60" : "#dcdfe6")};
+  border-radius: 6px;
   cursor: pointer;
   transition: all 0.3s;
+  font-weight: ${(props) => (props.active ? "600" : "normal")};
 
   &:hover {
     background-color: ${(props) => (props.active ? "#27ae60" : "#f8f9fa")};
+    border-color: ${(props) => (props.active ? "#27ae60" : "#3498db")};
   }
 
   &:disabled {
     background-color: #f8f9fa;
     color: #bdc3c7;
+    border-color: #dcdfe6;
     cursor: not-allowed;
   }
 `;
@@ -251,12 +354,13 @@ const ModalOverlay = styled.div`
   justify-content: center;
   align-items: center;
   z-index: 1000;
+  backdrop-filter: blur(3px);
 `;
 
 const ModalContent = styled.div`
   background-color: white;
-  border-radius: 8px;
-  padding: 2rem;
+  border-radius: 10px;
+  padding: 2.5rem;
   width: 100%;
   max-width: 500px;
   box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
@@ -264,7 +368,8 @@ const ModalContent = styled.div`
 
 const ModalTitle = styled.h3`
   color: #2c3e50;
-  font-size: 1.5rem;
+  font-size: 1.8rem;
+  margin-top: 0;
   margin-bottom: 1.5rem;
 `;
 
@@ -392,205 +497,214 @@ const VerifierDashboard: React.FC = () => {
   };
 
   return (
-    <DashboardContainer>
-      <Header>
-        <Title>Verifier Dashboard</Title>
-        <UserInfo>
-          <UserEmail>{userEmail}</UserEmail>
-          <LogoutButton onClick={handleLogout}>Logout</LogoutButton>
-        </UserInfo>
-      </Header>
+    <PageContainer>
+      <DashboardContainer>
+        <Header>
+          <Title>Verifier Portal</Title>
+          <UserInfo>
+            <UserEmail>{userEmail}</UserEmail>
+            <LogoutButton onClick={handleLogout}>Logout</LogoutButton>
+          </UserInfo>
+        </Header>
 
-      <TabContainer>
-        <Tab active={activeTab === "all"} onClick={() => setActiveTab("all")}>
-          All Applications
-        </Tab>
-        <Tab
-          active={activeTab === "pending"}
-          onClick={() => setActiveTab("pending")}
-        >
-          Pending Applications
-        </Tab>
-      </TabContainer>
+        <MainHeading>
+          <HeadingTitle>Loan Application Verification</HeadingTitle>
+          <HeadingSubtitle>
+            Review, verify and process loan applications from customers
+          </HeadingSubtitle>
+        </MainHeading>
 
-      {loading ? (
-        <LoadingSpinner>Loading applications...</LoadingSpinner>
-      ) : applications.length === 0 ? (
-        <EmptyState>
-          <EmptyStateIcon>📝</EmptyStateIcon>
-          <EmptyStateText>No applications found</EmptyStateText>
-        </EmptyState>
-      ) : (
-        <>
-          <ApplicationsGrid>
-            {currentApplications.map((application) => (
-              <Card key={application.id}>
-                <CardHeader>
-                  <CardTitle>{application.name}</CardTitle>
-                  <StatusBadge status={application.application_status}>
-                    {application.application_status}
-                  </StatusBadge>
-                </CardHeader>
-                <CardContent>
-                  <DetailsItem>
-                    <DetailsLabel>Application ID</DetailsLabel>
-                    <DetailsValue>#{application.id}</DetailsValue>
-                  </DetailsItem>
-                  <DetailsItem>
-                    <DetailsLabel>Email</DetailsLabel>
-                    <DetailsValue>{application.email}</DetailsValue>
-                  </DetailsItem>
-                  <DetailsItem>
-                    <DetailsLabel>Loan Amount</DetailsLabel>
-                    <DetailsValue>
-                      {formatCurrency(application.amount)}
-                    </DetailsValue>
-                  </DetailsItem>
-                  <DetailsItem>
-                    <DetailsLabel>Tenure</DetailsLabel>
-                    <DetailsValue>{application.tenure} months</DetailsValue>
-                  </DetailsItem>
-                  <DetailsItem>
-                    <DetailsLabel>Employment Status</DetailsLabel>
-                    <DetailsValue>
-                      {application.employment_status
-                        ? "Employed"
-                        : "Unemployed"}
-                    </DetailsValue>
-                  </DetailsItem>
-                  <DetailsItem>
-                    <DetailsLabel>Submitted On</DetailsLabel>
-                    <DetailsValue>
-                      {formatDate(application.createdAt)}
-                    </DetailsValue>
-                  </DetailsItem>
-                </CardContent>
-                <DetailsItem>
-                  <DetailsLabel>Reason for Loan</DetailsLabel>
-                  <DetailsValue>{application.reason}</DetailsValue>
-                </DetailsItem>
-                <DetailsItem
-                  style={{ marginTop: "0.5rem", marginBottom: "1.5rem" }}
-                >
-                  <DetailsLabel>Employment Address</DetailsLabel>
-                  <DetailsValue>{application.address}</DetailsValue>
-                </DetailsItem>
-                <ButtonGroup>
-                  {application.application_status === "PENDING" && (
-                    <>
-                      <ActionButton
-                        color="#e74c3c"
-                        onClick={() => openStatusModal(application, "REJECTED")}
-                        disabled={processingId === application.id}
-                      >
-                        Reject
-                      </ActionButton>
-                      <ActionButton
-                        color="#27ae60"
-                        onClick={() => openStatusModal(application, "VERIFIED")}
-                        disabled={processingId === application.id}
-                      >
-                        Verify
-                      </ActionButton>
-                    </>
-                  )}
-                  {application.application_status === "VERIFIED" && (
-                    <ActionButton
-                      color="#e74c3c"
-                      onClick={() => openStatusModal(application, "REJECTED")}
-                      disabled={processingId === application.id}
-                    >
-                      Reject
-                    </ActionButton>
-                  )}
-                  {application.application_status === "REJECTED" && (
-                    <ActionButton
-                      color="#27ae60"
-                      onClick={() => openStatusModal(application, "VERIFIED")}
-                      disabled={processingId === application.id}
-                    >
-                      Verify
-                    </ActionButton>
-                  )}
-                </ButtonGroup>
-              </Card>
-            ))}
-          </ApplicationsGrid>
+        <TabContainer>
+          <Tab active={activeTab === "all"} onClick={() => setActiveTab("all")}>
+            All Applications
+          </Tab>
+          <Tab
+            active={activeTab === "pending"}
+            onClick={() => setActiveTab("pending")}
+          >
+            Pending Applications
+          </Tab>
+        </TabContainer>
 
-          {totalPages > 1 && (
-            <Pagination>
-              <PaginationButton
-                onClick={() => handlePageChange(currentPage - 1)}
-                disabled={currentPage === 1}
-              >
-                Previous
-              </PaginationButton>
+        <ContentWrapper>
+          {loading ? (
+            <LoadingSpinner>Loading applications...</LoadingSpinner>
+          ) : applications.length === 0 ? (
+            <EmptyState>
+              <EmptyStateIcon>📝</EmptyStateIcon>
+              <EmptyStateText>No applications found</EmptyStateText>
+            </EmptyState>
+          ) : (
+            <>
+              <ApplicationsGrid>
+                {currentApplications.map((application) => (
+                  <Card key={application.id}>
+                    <CardHeader>
+                      <CardTitle>{application.name}</CardTitle>
+                      <StatusBadge status={application.application_status}>
+                        {application.application_status}
+                      </StatusBadge>
+                    </CardHeader>
+                    <CardContent>
+                      <DetailsItem>
+                        <DetailsLabel>Application ID</DetailsLabel>
+                        <DetailsValue>#{application.id}</DetailsValue>
+                      </DetailsItem>
+                      <DetailsItem>
+                        <DetailsLabel>Email</DetailsLabel>
+                        <DetailsValue>{application.email}</DetailsValue>
+                      </DetailsItem>
+                      <DetailsItem>
+                        <DetailsLabel>Loan Amount</DetailsLabel>
+                        <DetailsValue>
+                          {formatCurrency(application.amount)}
+                        </DetailsValue>
+                      </DetailsItem>
+                      <DetailsItem>
+                        <DetailsLabel>Tenure</DetailsLabel>
+                        <DetailsValue>{application.tenure} months</DetailsValue>
+                      </DetailsItem>
+                      <DetailsItem>
+                        <DetailsLabel>Employment Status</DetailsLabel>
+                        <DetailsValue>
+                          {application.employment_status
+                            ? "Employed"
+                            : "Unemployed"}
+                        </DetailsValue>
+                      </DetailsItem>
+                      <DetailsItem>
+                        <DetailsLabel>Submitted On</DetailsLabel>
+                        <DetailsValue>
+                          {formatDate(application.createdAt)}
+                        </DetailsValue>
+                      </DetailsItem>
+                    </CardContent>
+                    <DetailsFull>
+                      <DetailsLabel>Reason for Loan</DetailsLabel>
+                      <DetailsValue>{application.reason}</DetailsValue>
+                    </DetailsFull>
+                    <DetailsFull>
+                      <DetailsLabel>Employment Address</DetailsLabel>
+                      <DetailsValue>{application.address}</DetailsValue>
+                    </DetailsFull>
+                    <ButtonGroup>
+                      {application.application_status === "PENDING" && (
+                        <>
+                          <ActionButton
+                            color="#e74c3c"
+                            onClick={() => openStatusModal(application, "REJECTED")}
+                            disabled={processingId === application.id}
+                          >
+                            Reject
+                          </ActionButton>
+                          <ActionButton
+                            color="#27ae60"
+                            onClick={() => openStatusModal(application, "VERIFIED")}
+                            disabled={processingId === application.id}
+                          >
+                            Verify
+                          </ActionButton>
+                        </>
+                      )}
+                      {application.application_status === "VERIFIED" && (
+                        <ActionButton
+                          color="#e74c3c"
+                          onClick={() => openStatusModal(application, "REJECTED")}
+                          disabled={processingId === application.id}
+                        >
+                          Reject
+                        </ActionButton>
+                      )}
+                      {application.application_status === "REJECTED" && (
+                        <ActionButton
+                          color="#27ae60"
+                          onClick={() => openStatusModal(application, "VERIFIED")}
+                          disabled={processingId === application.id}
+                        >
+                          Verify
+                        </ActionButton>
+                      )}
+                    </ButtonGroup>
+                  </Card>
+                ))}
+              </ApplicationsGrid>
 
-              {Array.from({ length: totalPages }, (_, i) => i + 1).map(
-                (page) => (
+              {totalPages > 1 && (
+                <Pagination>
                   <PaginationButton
-                    key={page}
-                    active={page === currentPage}
-                    onClick={() => handlePageChange(page)}
+                    onClick={() => handlePageChange(currentPage - 1)}
+                    disabled={currentPage === 1}
                   >
-                    {page}
+                    Previous
                   </PaginationButton>
-                )
+
+                  {Array.from({ length: totalPages }, (_, i) => i + 1).map(
+                    (page) => (
+                      <PaginationButton
+                        key={page}
+                        active={page === currentPage}
+                        onClick={() => handlePageChange(page)}
+                      >
+                        {page}
+                      </PaginationButton>
+                    )
+                  )}
+
+                  <PaginationButton
+                    onClick={() => handlePageChange(currentPage + 1)}
+                    disabled={currentPage === totalPages}
+                  >
+                    Next
+                  </PaginationButton>
+                </Pagination>
               )}
-
-              <PaginationButton
-                onClick={() => handlePageChange(currentPage + 1)}
-                disabled={currentPage === totalPages}
-              >
-                Next
-              </PaginationButton>
-            </Pagination>
+            </>
           )}
-        </>
-      )}
-
-      {showModal && selectedApplication && (
-        <ModalOverlay>
-          <ModalContent>
-            <ModalTitle>
-              {selectedStatus === "VERIFIED"
-                ? "Verify Application"
-                : "Reject Application"}
-            </ModalTitle>
-            <p>
-              Are you sure you want to
-              <strong>
-                {selectedStatus === "VERIFIED" ? " verify " : " reject "}
-              </strong>
-              the loan application from{" "}
-              <strong>{selectedApplication.name}</strong>?
-            </p>
-            {selectedStatus === "REJECTED" && (
-              <p style={{ marginTop: "1rem", color: "#e74c3c" }}>
-                This action will mark the application as rejected.
+        </ContentWrapper>
+        
+        {showModal && selectedApplication && (
+          <ModalOverlay>
+            <ModalContent>
+              <ModalTitle>
+                {selectedStatus === "VERIFIED"
+                  ? "Verify Application"
+                  : "Reject Application"}
+              </ModalTitle>
+              <p>
+                Are you sure you want to
+                <strong>
+                  {selectedStatus === "VERIFIED" ? " verify " : " reject "}
+                </strong>
+                the loan application from{" "}
+                <strong>{selectedApplication.name}</strong>?
               </p>
-            )}
-            {selectedStatus === "VERIFIED" && (
-              <p style={{ marginTop: "1rem", color: "#27ae60" }}>
-                This action will mark the application as verified and forward it
-                to admin for final approval.
-              </p>
-            )}
-            <ModalButtonGroup>
-              <ActionButton color="#7f8c8d" onClick={closeModal}>
-                Cancel
-              </ActionButton>
-              <ActionButton
-                color={selectedStatus === "VERIFIED" ? "#27ae60" : "#e74c3c"}
-                onClick={updateApplicationStatus}
-              >
-                Confirm
-              </ActionButton>
-            </ModalButtonGroup>
-          </ModalContent>
-        </ModalOverlay>
-      )}
-    </DashboardContainer>
+              {selectedStatus === "REJECTED" && (
+                <p style={{ marginTop: "1rem", color: "#e74c3c" }}>
+                  This action will mark the application as rejected.
+                </p>
+              )}
+              {selectedStatus === "VERIFIED" && (
+                <p style={{ marginTop: "1rem", color: "#27ae60" }}>
+                  This action will mark the application as verified and forward it
+                  to admin for final approval.
+                </p>
+              )}
+              <ModalButtonGroup>
+                <ActionButton color="#7f8c8d" onClick={closeModal}>
+                  Cancel
+                </ActionButton>
+                <ActionButton
+                  color={selectedStatus === "VERIFIED" ? "#27ae60" : "#e74c3c"}
+                  onClick={updateApplicationStatus}
+                >
+                  Confirm
+                </ActionButton>
+              </ModalButtonGroup>
+            </ModalContent>
+          </ModalOverlay>
+        )}
+      </DashboardContainer>
+    </PageContainer>
   );
 };
 
