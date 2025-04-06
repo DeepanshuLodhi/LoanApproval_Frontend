@@ -1,54 +1,77 @@
-# React + TypeScript + Vite
+# LoanSystem Frontend
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A React+TypeScript frontend for the LoanSystem application with role-based dashboards.
 
-Currently, two official plugins are available:
+## Overview
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+The LoanSystem frontend provides three separate role-based dashboards:
 
-## Expanding the ESLint configuration
+1. **User Dashboard**: Submit loan applications and track application status
+2. **Verifier Dashboard**: Review and verify/reject applications 
+3. **Admin Dashboard**: Make final approval/rejection decisions
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+## Tech Stack
 
-```js
-export default tseslint.config({
-  extends: [
-    // Remove ...tseslint.configs.recommended and replace with this
-    ...tseslint.configs.recommendedTypeChecked,
-    // Alternatively, use this for stricter rules
-    ...tseslint.configs.strictTypeChecked,
-    // Optionally, add this for stylistic rules
-    ...tseslint.configs.stylisticTypeChecked,
-  ],
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
-```
+- React.js with TypeScript
+- React Router for navigation
+- Axios for API requests
+- Context API/Redux for state management
+- CSS/styled-components for styling
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+## Installation
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+1. **Clone the repository**
+   ```bash
+   git clone https://github.com/yourusername/loan-system-frontend.git
+   cd loan-system-frontend
+   ```
 
-export default tseslint.config({
-  plugins: {
-    // Add the react-x and react-dom plugins
-    'react-x': reactX,
-    'react-dom': reactDom,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended typescript rules
-    ...reactX.configs['recommended-typescript'].rules,
-    ...reactDom.configs.recommended.rules,
-  },
-})
-```
+2. **Install dependencies**
+   ```bash
+   npm install
+   ```
+
+3. **Configure environment**
+   
+   Create a `.env` file:
+   ```
+   REACT_APP_API_URL=http://localhost:5000/api
+   ```
+
+4. **Start development server**
+   ```bash
+   npm start
+   ```
+   
+   The app will open at `http://localhost:3000`
+
+## Features
+
+### User Dashboard
+- User registration and login
+- Loan application submission
+- Real-time status tracking
+
+### Verifier Dashboard
+- Application review interface
+- Verification workflow
+- Notes and feedback system
+
+### Admin Dashboard
+- Final approval/rejection
+- User and verifier management
+- System metrics
+
+## Main Dependencies
+
+- React: ^18.2.0
+- React Router DOM: ^6.8.0
+- TypeScript: ^4.9.5
+- Axios: ^1.3.0
+- Formik: ^2.2.9
+- Yup: ^1.0.0
+- Styled-components: ^5.3.6
+
+## License
+
+MIT License
